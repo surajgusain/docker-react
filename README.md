@@ -1,44 +1,27 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The difference between Dockerfile and Dockerfile.dev
+Dockerfile => For production builds ( `npm run build`)
+Dockerfile.dev => For starting local environment ( `npm run start` )
 
-## Available Scripts
+When we build it using `docker build .`; Docker searches for a Dockerfile and since we have a Dockerfile.dev
+It gives an error saying `unable to prepare context: unable to evaluate symlinks in Dockerfile path: lstat /home/suraj/projects/docker-projects/frontend/Dockerfile: no such file or directory`
 
-In the project directory, you can run:
+We can run the Dockerfile.dev using `sudo docker build -f Dockerfile.dev .`
+So, our react-app already has tons of dependencies already installed inside node_modules folder.
+Hence we can delete our local node_modules directory and rebuild the docker container using `sudo docker build -f Dockerfile.dev .`
 
-### `npm start`
+Till now; we were doing `COPY . .`; We were copying all files from our local to our docker environment.
+So, we create volumes in Docker which create reference between local and our Docker folder.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`sudo docker run -p 3000:30 -v $(pwd):/app ec25c36085c1`
+Here, `-v $(pwd:/app)` means we are creating a volume under pwd/app with refernce to the contents in our local directory.
+The above command gives us this error; `Local package.json exists, but node_modules missing, did you mean to install?`
+This issue occurs because we want to create a reference of node_modules folder which is not inside Docker.
+We can fix the missing node_modules issue by adding `-v /app/node_modules`. It adds a placeholder inside the folder and tells it to not map it with anything.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+volumes:
+  - /app/node_modules ( This means .. DO NOT try to map a folder against /app/node_modules folder )
+  - .:/app ( Maps current folder to /app folder )
+  build:
+    context: . ( Location of current folder )
+    dockerfile: Dockerfile.dev ( Location of docker file )  
+`docker attach container-name` => Attaches terminal input with standard input, output and error of container.
