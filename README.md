@@ -51,6 +51,7 @@ deploy:
 
 3. Create a user on AWS. Store user-credentials securely.
 4. Goto Travis-CI project -> More options -> Add secret and access key
-  access_key_id: $AWS_ACCESS_KEY
+  access_key_id:
+    secret: "$AWS_ACCESS_KEY"
   secret_access_key:
     secure: "$AWS_SECRET_KEY"
