@@ -55,3 +55,5 @@ deploy:
     secret: "$AWS_ACCESS_KEY"
   secret_access_key:
     secure: "$AWS_SECRET_KEY"
+5. Check if you have exposed port 80 in your dockerfile using:
+   EXPOSE 80
