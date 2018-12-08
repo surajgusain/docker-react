@@ -25,3 +25,11 @@ volumes:
     context: . ( Location of current folder )
     dockerfile: Dockerfile.dev ( Location of docker file )  
 `docker attach container-name` => Attaches terminal input with standard input, output and error of container.
+
+`docker build -f Dockerfile.dev .` -> ( trailing . defines the context ie. which folder should it refer to)
+
+`docker run <container> npm run test -- --coverage` .. ( Displays output of coverage test. )
+
+In `travis.yml`:
+services:
+  - docker   .. ( Installs docker )
