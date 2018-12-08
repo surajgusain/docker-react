@@ -33,3 +33,24 @@ volumes:
 In `travis.yml`:
 services:
   - docker   .. ( Installs docker )
+
+
+AWS setup :
+1. Create an AWS Elastic beanstalk instance
+2. Add the following in .travis.xml
+
+deploy:
+  provider: elasticbeanstalk ( Tell travis CI to use this set of instructions to attempt to automatically deploy our application )
+  region: <your-ebs-instance-region>
+  app: "docker-react" ( Application name of elasticbeanstalk )
+  env: "DockerReact-env" ( Environment name of the EBS instance )
+  bucket_name: <name of created S3 bucket >
+  bucket_path: <ebs application-name> ( You might not see it if you have created the EBS for first time;)
+  on:          ( This tells Travis CI when to deploy )
+    branch: master ( Push when branch = master )
+
+3. Create a user on AWS. Store user-credentials securely.
+4. Goto Travis-CI project -> More options -> Add secret and access key
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
