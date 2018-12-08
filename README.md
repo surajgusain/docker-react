@@ -57,3 +57,7 @@ deploy:
     secure: "$AWS_SECRET_KEY"
 5. Check if you have exposed port 80 in your dockerfile using:
    EXPOSE 80
+6. If you still see a failed deployment:
+Try editing the 'COPY' line of your Dockerfile like so:
+COPY package*.json ./
+Sometimes AWS has a tough time with the '.' folder designation and prefers the long form ./
